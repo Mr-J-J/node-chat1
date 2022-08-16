@@ -8,11 +8,12 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
-  console.log('a user connected')
 
+  console.log('-----------------------')
   socket.on("join", function (name) {
     usocket[name] = socket
     io.emit("join", name)
+    console.log(name+'加入了群聊')
   })
 
   socket.on("message", function (msg) {
@@ -20,7 +21,20 @@ io.on('connection', function(socket){
   })
 
 });
-
+//获取本地ip
+const os = require('os');
+function getIPAdress() {
+  var interfaces = os.networkInterfaces();
+  for (var devName in interfaces) {
+    var iface = interfaces[devName];
+    for (var i = 0; i < iface.length; i++) {
+      var alias = iface[i];
+      if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+        return alias.address;
+      }
+    }
+  }
+}
 http.listen(3000, function() {
-  console.log('listening on *:3000');
+  console.log(getIPAdress()+':3000');
 });
