@@ -32,10 +32,9 @@
     });
     var name   = prompt("请输入你的昵称：");
     var socket = io()
-    
     //发送昵称给后端，并更改网页title
     socket.emit("join", name)
-    document.title = name + "的秘密群聊"
+    document.title = name + "的秘密聊天室"
 
     socket.on("join", function (user) {
       addLine(user + " 加入了群聊")
@@ -53,9 +52,22 @@
       $("#m").val("") //置空消息框
       return false //阻止form提交
     })
-
+    //=======添加一行消息到聊天窗口=======
     function addLine(msg) {
       $('#messages').append($('<li>').text(msg));
+    }
+    //========解释上一句==========
+    function jieshi(){
+      socket.emit("jieshi")
+      console.log('解释成功:')
+    }
+    socket.on("logreturn", function (con) {
+      console.log(con)
+    })
+  //  ==============翻译语言==================
+    function fanyi(msg){
+      socket.emit("fanyi",msg)
+      console.log('翻译成功:')
     }
   </script>
 </html>

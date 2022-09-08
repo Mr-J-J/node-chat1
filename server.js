@@ -2,6 +2,8 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var usocket = [];
+const em = require('emyuyan');
+var con = '';
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -17,7 +19,17 @@ io.on('connection', function(socket){
   })
 
   socket.on("message", function (msg) {
-    io.emit("message", msg) //将新消息广播出去
+    con = msg
+    io.emit("message", em.chouxiang(msg)) //将新消息广播出去
+  })
+
+//  接受解释指令
+  socket.on("jieshi", function () {
+    socket.emit("logreturn", con)
+  })
+//  接受翻译指令
+  socket.on("fanyi", function (msg) {
+    socket.emit("logreturn", em.dechouxiang(msg))
   })
 
 });
